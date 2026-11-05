@@ -8,6 +8,10 @@ Recruiters manage candidates, send single or bulk messages, and track delivery, 
 | Recruiter API | `backend/` | 8000 | Django, Django REST Framework |
 | Dummy provider | `provider/` | 8001 | Separate Django project that behaves like a WhatsApp/email provider |
 
+**Live demo:** https://frontend-liart-eight-10.vercel.app/ (backend on Render's free tier: if the first load fails, wait ~1 minute and refresh)
+
+**Deployment:** frontend on Vercel; API + worker and dummy provider on Render (`render.yaml`). SQLite on Render's free disk resets on restart, and `seed_demo` re-creates the demo data. The dev keys (`dev-provider-key`, `dev-webhook-secret`) are for the demo only; a real deployment would use random secrets.
+
 ## Run it
 
 The frontend requires Node.js 20.19.0 or newer (or a current Node.js LTS release).
