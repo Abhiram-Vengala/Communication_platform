@@ -50,7 +50,7 @@ Demo switches: `POST :8001/v1/admin/state` with header `Authorization: Bearer de
 `{"mode": "normal|rate_limit|outage", "duplicate_webhooks": true, "out_of_order": true}`.
 In outage mode the app shows a banner and queued messages go out once the provider is back.
 
-## What the UI covers (from the Figma)
+## What the UI covers 
 
 Candidate table (selection, per-column filters, search, pagination, live statuses), Add candidate, Delete (single and multiple copy), Send message drawer (1 or many recipients, chips clamp to 2 lines with "+ n"), Communication history drawer (newest first), empty states (no candidates, no history, no search results), loading skeletons, error states, and toasts.
 
