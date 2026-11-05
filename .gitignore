@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.sqlite3
+.env
+node_modules/
+.next/
+dist/
+*.log
+.DS_Store

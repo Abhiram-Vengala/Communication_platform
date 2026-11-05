@@ -1,0 +1,43 @@
+# Render Blueprint: deploys the dummy provider and the recruiter API (free tier).
+# The frontend is deployed separately on Vercel (root directory: frontend).
+services:
+  - type: web
+    name: ccp-provider
+    runtime: python
+    plan: free
+    rootDir: provider
+    buildCommand: pip install -r requirements.txt && python manage.py migrate
+    startCommand: gunicorn provider_project.wsgi --workers 1 --threads 4 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: PROVIDER_API_KEY
+        sync: false   # choose any secret; use the same value in ccp-api
+      - key: WEBHOOK_SECRET
+        sync: false   # choose any secret; use the same value as PROVIDER_WEBHOOK_SECRET in ccp-api
+      - key: WEBHOOK_URL
+        sync: false   # https://<ccp-api>.onrender.com/api/webhooks/provider/
+
+  - type: web
+    name: ccp-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py seed_demo
+    # Free tier has no background workers, so the worker runs next to the web process.
+    startCommand: python manage.py run_worker & gunicorn config.wsgi --workers 1 --threads 4 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: PROVIDER_BASE_URL
+        sync: false   # https://<ccp-provider>.onrender.com
+      - key: PROVIDER_API_KEY
+        sync: false   # same as ccp-provider
+      - key: PROVIDER_WEBHOOK_SECRET
+        sync: false   # same as WEBHOOK_SECRET in ccp-provider
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false   # https://<your-app>.vercel.app
